@@ -1,0 +1,38 @@
+{
+  "files": {
+    "static/js/0.1b1dc2b3.chunk.js": "/actuatorxms/static/js/0.1b1dc2b3.chunk.js",
+    "static/js/0.1b1dc2b3.chunk.js.map": "/actuatorxms/static/js/0.1b1dc2b3.chunk.js.map",
+    "main.css": "/actuatorxms/static/css/main.451dc8bf.chunk.css",
+    "main.js": "/actuatorxms/static/js/main.a776e11f.chunk.js",
+    "main.js.map": "/actuatorxms/static/js/main.a776e11f.chunk.js.map",
+    "runtime-main.js": "/actuatorxms/static/js/runtime-main.9ad87e54.js",
+    "runtime-main.js.map": "/actuatorxms/static/js/runtime-main.9ad87e54.js.map",
+    "static/css/3.35fcc229.chunk.css": "/actuatorxms/static/css/3.35fcc229.chunk.css",
+    "static/js/3.9d0bb3e8.chunk.js": "/actuatorxms/static/js/3.9d0bb3e8.chunk.js",
+    "static/js/3.9d0bb3e8.chunk.js.map": "/actuatorxms/static/js/3.9d0bb3e8.chunk.js.map",
+    "static/js/4.dbee1a75.chunk.js": "/actuatorxms/static/js/4.dbee1a75.chunk.js",
+    "static/js/4.dbee1a75.chunk.js.map": "/actuatorxms/static/js/4.dbee1a75.chunk.js.map",
+    "static/js/5.c4fbda3a.chunk.js": "/actuatorxms/static/js/5.c4fbda3a.chunk.js",
+    "static/js/5.c4fbda3a.chunk.js.map": "/actuatorxms/static/js/5.c4fbda3a.chunk.js.map",
+    "static/js/6.81cb9705.chunk.js": "/actuatorxms/static/js/6.81cb9705.chunk.js",
+    "static/js/6.81cb9705.chunk.js.map": "/actuatorxms/static/js/6.81cb9705.chunk.js.map",
+    "static/js/7.4c840528.chunk.js": "/actuatorxms/static/js/7.4c840528.chunk.js",
+    "static/js/7.4c840528.chunk.js.map": "/actuatorxms/static/js/7.4c840528.chunk.js.map",
+    "static/js/8.caceacf6.chunk.js": "/actuatorxms/static/js/8.caceacf6.chunk.js",
+    "static/js/8.caceacf6.chunk.js.map": "/actuatorxms/static/js/8.caceacf6.chunk.js.map",
+    "index.html": "/actuatorxms/index.html",
+    "precache-manifest.58cd75f16ff8caf6b4d1567a4ee3881f.js": "/actuatorxms/precache-manifest.58cd75f16ff8caf6b4d1567a4ee3881f.js",
+    "service-worker.js": "/actuatorxms/service-worker.js",
+    "static/css/3.35fcc229.chunk.css.map": "/actuatorxms/static/css/3.35fcc229.chunk.css.map",
+    "static/css/main.451dc8bf.chunk.css.map": "/actuatorxms/static/css/main.451dc8bf.chunk.css.map",
+    "static/js/3.9d0bb3e8.chunk.js.LICENSE.txt": "/actuatorxms/static/js/3.9d0bb3e8.chunk.js.LICENSE.txt",
+    "static/media/app.css": "/actuatorxms/static/media/standing.c753bbbc.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.9ad87e54.js",
+    "static/css/3.35fcc229.chunk.css",
+    "static/js/3.9d0bb3e8.chunk.js",
+    "static/css/main.451dc8bf.chunk.css",
+    "static/js/main.a776e11f.chunk.js"
+  ]
+}
