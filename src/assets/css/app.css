@@ -1,0 +1,100 @@
+
+/* Layout */
+.site-layout-content {
+    background-image: url("../images/container.svg");
+    padding: 24px;
+    min-height:100vh;
+    box-sizing: border-box;
+  }
+
+.site-layout-footer{ 
+    text-align: center;
+    color: white;
+    background-color: rgb(119, 115, 115);
+    bottom: 0px;
+    width:100%;
+    /* position: static; */
+}
+
+.landing-page-container{
+    background-color: rgba(99, 169, 180, 0.686);
+    margin: -24px;
+    padding: 24px;
+    height: 100vh;
+}
+
+.landing-page-left{
+    background-image: url("../images/standing.png");
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+
+/* Components */
+.component-exam-card{
+    height:auto;
+    width: 100%;
+}
+
+.component-exam-card:hover{
+    scale: 110%;
+}
+
+.component-shadow{
+    -webkit-box-shadow: 0px 0px 28px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 28px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
+    }
+.component-shadow:hover{
+-webkit-box-shadow: 0px 0px 28px 0px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px 0px 28px 0px rgba(0,0,0,0.75);
+box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+}
+
+.component-content{
+    background-color: rgba(226, 229, 231, 0.821);
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 0px 28px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 28px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.19);
+}
+
+
+
+
+/* Button Classes */
+.btn-go-to-app{
+    width:100%;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.19);
+}
+
+.btn-add-float{
+    scale:150%;
+    position: absolute;
+    right: 5%;
+    bottom: 50px;
+    transform: rotateZ("12")
+}
+
+.btn-add-float:hover{
+    scale:180%;
+}
+
+
+.btn-add-float-question{
+    top: 0px;
+    right:0px;
+    position: absolute;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.19);
+}
+
+.btn-add-float-question:active{
+    scale:85%;
+    box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.19);
+}
+
+.btn-section-toggle{
+    top: 0px;
+    right:0px;
+    position: absolute;
+}
+/* antd */
