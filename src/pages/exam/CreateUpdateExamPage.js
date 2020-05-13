@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Row,Col, PageHeader, Input, DatePicker, Typography, Divider, TimePicker, Button,Table,Popconfirm, Badge, Switch } from 'antd';
+import {Affix, Row,Col, PageHeader, Input, DatePicker,  Typography, Divider, TimePicker, Button,Table,Popconfirm, Switch, Statistic } from 'antd';
 import { PlusOutlined, EditFilled, DeleteFilled} from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 
@@ -24,7 +24,9 @@ export default function CreateUpdateExamPage({
     deleteExamQuestion,
     deleteExamCandidate,
     updateExamQuestion,
-    updateExamCandidate
+    updateExamCandidate,
+    handleSaveExamination,
+    existing
 }){
     const history = useHistory();
 
@@ -40,24 +42,41 @@ export default function CreateUpdateExamPage({
     return(
         <Row gutter={[24,24]}>
 
-            <Col md={5}>
+            <Col xs={24} sm={24} md={5}>
                 <PageHeader 
                 onBack={()=>history.push("/app")}
-                title="New Exam"/> 
+                title={existing?"Update Exam":"New Exam"}/> 
                 
-                <div className="">
-                    <Badge status={examTitle?"success":"default"} text="Basic Information"/><br/>
+            <Affix  offsetTop={10}>
+                <div style={{padding:"10px"}}className="component-content">
+         
+                    {/* <Badge status={examTitle?"success":"default"} text="Basic Information"/><br/>
                     <Badge status={examDate&&examStartTime&&examDuration?"success":"default"} 
                     text="Schedule"/><br/>
                     <Badge status={examQuestions.length?"success":"default"} text="Questions"/><br/>
                     <Badge status={examCandidates.length?"success":"default"} text="Candidates"/><br/>
-                    <Badge status="default" text="Publish"/>
-
+                    <Badge status="default" text="Publish"/> */}
+                <Row gutter={24}>
+                    <Col>
+                    <Statistic title="Candidates"  value={examCandidates.length}/><br/>
+                    </Col>
+                    <Col>
+                    <Statistic title="Cost" prefix="$" precision={2} value={examCandidates.length}/><br/>
+                    </Col>
+                    <Col>
+                    <Statistic title="Credits" prefix="$" precision={2} value={100 - examCandidates.length}/><br/>
+                    </Col>
+                </Row>
+                <Row>
+                    <Button onClick={()=>handleSaveExamination()} type="ghost">Save Exam</Button>
+                    <Button type="primary">Publish Exam</Button>
+                </Row>
                 </div>
+            </Affix>
                 
             </Col>
 
-            <Col className="component-content" md ={16}>
+            <Col className="component-content" xs={24} sm={24} md ={16}>
                 <Input.Group compact >
                     <Typography.Title level={3}>Basic Information </Typography.Title>
                     <Input 
@@ -70,7 +89,7 @@ export default function CreateUpdateExamPage({
 
                 <Input.Group>
                     <Typography.Title level={3}>Schedule</Typography.Title>
-                     <Switch onChange={(checked)=>setExamPolicy("TIME",checked)} className="btn-section-toggle"  defaultChecked={examPolicy.TIME}/>
+                     <Switch onChange={(checked)=>setExamPolicy("TIME",checked)} className="btn-section-toggle" checked={examPolicy.TIME}  defaultChecked={examPolicy.TIME}/>
                     <DatePicker disabled={!examPolicy.TIME} onChange={(value)=>setExamDate(value)}  value={examDate} />
                     <TimePicker disabled={!examPolicy.TIME} onChange={(value)=>setExamStartTime(value)}  value={examStartTime} />
                     <TimePicker disabled={!examPolicy.TIME} onChange={(value)=>setExamDuration(value)}  value={examDuration} placeholder="Select Duration"/>

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Spin, Result } from 'antd';
 
-const Loader = ()=>(
+const Loader = ({message})=>(
 
-    <Result icon={<Spin/>}/>
+    <Result icon={<Spin/>} subTitle={message}/>
 
 )
 

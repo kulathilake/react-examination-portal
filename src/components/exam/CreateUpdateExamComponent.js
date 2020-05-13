@@ -1,53 +1,163 @@
 import React from 'react';
 import CreateUpdateExamPage from '../../pages/exam/CreateUpdateExamPage';
 import uid from 'uid';
-import { message } from 'antd';
+import { message
 
-export default class CreateUpdateExamComponent extends React.Component{
-    constructor({id,title,...rest}){
+ } from 'antd';
+import {withFirebase} from '../../firebase';
+import moment from 'moment';
+import Loader from '../loader/loader';
+
+export class CreateUpdateExamComponent extends React.Component{
+    constructor({firebase,params}){
         super()
         this.state = {
-            examId:id||uid(10),
-            examTitle:title,
-            examDate:null,
-            examStartTime:null,
-            examDuration:null,
-            examQuestions:[],
-            examCandidates:[],
+            examId:params.id||uid(10),
+            title:null,
+            date:null,
+            start:null,
+            duration:null,
+            questions:[],
+            candidates:[],
             examPolicy:{TIME:true}
         }
+        this.firebase = firebase;
 
     }
     
+    
     componentDidMount(){
-        
+        if(this.props.params.id){
+            this.setState({
+                existing:true,
+                loading:true,
+                action_message:"Loading Examination"
+            })
+            const queue = [
+                this.firebase.fetchExamTitle(this.props.params.id).then(res=>
+                    this.setState({
+                        title:res.data().title,
+                        action_message:"Loading Basic Information"
+                    })),
+                
+                this.firebase.fetchExamPolicy(this.props.params.id).then(res=>
+                    this.setState({
+                        examPolicy:{...res.data()}
+                    })
+                ),    
+                    
+                this.firebase.fetchExamSchedule(this.props.params.id).then(res=>
+                    {if(res.data()){
+                        this.setState({
+                            date:res.data().date
+                                ?moment(res.data().date.toDate())
+                                :null,
+                            start:res.data().start
+                                ?moment(res.data().start.toDate())
+                                :null,
+                            duration:res.data().duration
+                                ?moment(res.data().duration.toDate())
+                                :null,
+                            action_message:"Loading Exam Schedule"        
+                            })
+                    }}
+                    ),
+
+                    this.firebase.fetchExamQuestions(this.props.params.id).then(res => {
+                        this.setState({
+                            questions: res.data().questions,
+                            action_message: "Loading Questions"
+                        })
+                    }),
+
+                    this.firebase.fetchExamCandidates(this.props.params.id).then(res => {
+                        this.setState({
+                            candidates: res.data().candidates,
+                            action_message: "Loading Candidates"
+                        })
+                    })
+                ]
+
+            Promise.all(queue).then(()=>{
+                this.setState({
+                    loading:false
+                })
+            })
+        };
     }
     
+    
+    componentDidUpdate(){
+        console.log(this.state.examPolicy)
+        if(this.state.action_progress){
+            message.loading(this.state.action_message,0.5)
+        }
+    }
+    
+    handleSaveExamination = () => {
+        this.setState({
+            action_progress:true,
+            action_message:"Saving Examination"
+        })
+        if(this.state.title){
+            Promise.all([
+               this.firebase.createExamination(this.state.examId,{title:this.state.title}),
+               this.firebase.createExamQuestions(this.state.examId,{questions:this.state.questions}),
+               this.firebase.createExamCandidates(this.state.examId,{candidates:this.state.candidates}),
+               this.firebase.createExamPolicy(this.state.examId,this.state.examPolicy),
+               this.state.examPolicy.TIME?this.firebase.createExamSchedule(this.state.examId,{
+                   date:this.state.date?this.state.date.toDate():null,
+                   start:this.state.start?this.state.start.toDate():null,
+                   duration:this.state.duration?this.state.duration.toDate():null
+                }):null
+           ]).then(()=>{
+               this.setState({
+                   action_progress:false,
+                   action_message:null
+               },()=>{
+                   if(this.props.params.id){
+                       message.success("Successfully Updated Exam")
+                   }else{
+                    message.success("Successfully Created Exam")
+                   }
+               })
+           }).catch((e)=>{
+                console.log(e)
+                message.error("Something went wrong!")})
+        }else{
+            this.setState({
+                action_progress:false,
+                action_message:null
+            })
+            message.error("Incomplete Details")
+        }
+    }
+
     setExamTitle = (title) =>{
         this.setState({
-            examTitle:title
+            title:title
         })}
     setExamDate = (Date) =>{
         this.setState(()=>({
-            examDate:Date
+            date:Date
         }))}
     setExamStartTime = (startTime) =>{
         this.setState(()=>({
-            examStartTime: startTime
+            start: startTime
         }))}
     setExamDuration = (duration) =>{
         this.setState(()=>({
-            examDuration:duration
+            duration:duration
         }))}
     setExamQuestions = (question) =>{
         this.setState((state)=>({
-            examQuestions: state.examQuestions.concat(question)
+            questions: state.questions.concat(question)
         }),()=>{
             message.success("Question Added")
         })}
     setExamCandidates = (candidate) =>{
         this.setState((state)=>({
-            examCandidates: [...state.examCandidates,candidate]
+            candidates: [...state.candidates,candidate]
         }),()=>{
             message.success("Candidate Added")
         })}  
@@ -64,7 +174,7 @@ export default class CreateUpdateExamComponent extends React.Component{
 
     deleteExamQuestion = (deleteid) =>{
         this.setState((state)=>({
-            examQuestions: state.examQuestions.filter(item=>{return item.id!==deleteid})
+            questions: state.questions.filter(item=>{return item.id!==deleteid})
         }),()=>{
             message.success("Question Deleted")
         })
@@ -72,7 +182,7 @@ export default class CreateUpdateExamComponent extends React.Component{
 
     deleteExamCandidate = (deleteuid) =>{
         this.setState((state)=>({
-            examCandidates: state.examCandidates.filter(item=>{return item.otp !== deleteuid})
+            candidates: state.candidates.filter(item=>{return item.otp !== deleteuid})
         }),()=>{
             message.success("Candidate Deleted")
         })
@@ -80,22 +190,26 @@ export default class CreateUpdateExamComponent extends React.Component{
 
     updateExamQuestion = (id,title) => {
         this.setState((state)=>({
-            examQuestions: state.examQuestions.filter(item=>{return item.id!==id}).concat({id:id,title:title})
+            questions: state.questions.filter(item=>{return item.id!==id}).concat({id:id,title:title})
         }),()=>{
             message.success("Question Updated")
         })
     }
         
     render(){
+        if(this.state.loading){
+           return <Loader message={this.state.action_message}/>
+        }
         return(
                 <CreateUpdateExamPage 
-        examTitle = {this.state.examTitle}
-        examDate = {this.state.examDate}
-        examStartTime = {this.state.examStartTime}
-        examDuration = {this.state.examDuration}
-        examQuestions = {this.state.examQuestions}
-        examCandidates = {this.state.examCandidates}
+        examTitle = {this.state.title}
+        examDate = {this.state.date}
+        examStartTime = {this.state.start}
+        examDuration = {this.state.duration}
+        examQuestions = {this.state.questions}
+        examCandidates = {this.state.candidates}
         examPolicy = {this.state.examPolicy}
+        existing = {this.state.existing}
         setExamTitle = {this.setExamTitle}
         setExamDate = {this.setExamDate}
         setExamStartTime = {this.setExamStartTime}
@@ -106,9 +220,12 @@ export default class CreateUpdateExamComponent extends React.Component{
         deleteExamQuestion = {this.deleteExamQuestion}
         deleteExamCandidate ={this.deleteExamCandidate}
         updateExamQuestion = {this.updateExamQuestion}
+        handleSaveExamination = {this.handleSaveExamination}
         />
-
-  )
+        )
     }   
 
 }
+
+
+export default withFirebase(CreateUpdateExamComponent)

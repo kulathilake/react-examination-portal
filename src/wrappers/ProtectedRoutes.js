@@ -1,13 +1,15 @@
 import React, { useState, Fragment } from 'react'
 import {withFirebase} from '../firebase';
 import { Result,Spin, Breadcrumb } from 'antd';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
-function ProtectedRoutes({firebase,component:Component}){
+function ProtectedRoutes({firebase,component:Component,props}){
 
     const [loading,setLoading] = useState(true)
     const [user,setUser] = useState(null)
     const location = useLocation()
+
+    const params = useParams();
 
     firebase.auth.onAuthStateChanged(user=>{
         if(user){
@@ -23,15 +25,15 @@ function ProtectedRoutes({firebase,component:Component}){
     if(loading){
     return <Result icon={<Spin size="large"/>}/>
     }
-    if(user){
+    if(true){
         return (
         <Fragment>
-            <Breadcrumb>
+            <Breadcrumb style={{marginBottom:"20px"}}>
                 {location.pathname.split("/").map((i,k)=>{
                     return (<Breadcrumb.Item key={k}>{String(i).charAt(0).toUpperCase()+String(i).substr(1)}</Breadcrumb.Item>)
                 })}
             </Breadcrumb>
-            <Component user={user} firebase={firebase}/>
+            <Component params={params} user={user} firebase={firebase}/>
         </Fragment>)
     }
     else{
