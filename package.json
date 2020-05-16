@@ -1,6 +1,6 @@
 {
   "name": "actuator-xms",
-  "homepage": ".",
+  "homepage": "",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -11,6 +11,7 @@
     "antd": "^4.2.0",
     "firebase": "^7.14.3",
     "moment-duration-format": "^2.3.2",
+    "netlify-cli": "^2.51.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",

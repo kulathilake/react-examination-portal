@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import {Button, Menu, Dropdown, Spin } from 'antd';
 import {withFirebase} from '../../firebase';
-import {GoogleOutlined} from '@ant-design/icons';
-
+import {GoogleOutlined,  LoginOutlined,  UserOutlined} from '@ant-design/icons';
+import Logo from '../../assets/images/favicon-32x32.png'
 export default function Header({firebase}){
 
     const [loading,setLoading] = useState(true);
@@ -33,18 +33,19 @@ export default function Header({firebase}){
 
     const usermenu = (
         <Menu>
-            <Menu.Item>Profile</Menu.Item>
-            <Menu.Item onClick = {()=>handleSignOut()}>Logout</Menu.Item>
+            <Menu.Item><UserOutlined/>Profile</Menu.Item>
+            <Menu.Item onClick = {()=>handleSignOut()}><LoginOutlined/>Logout</Menu.Item>
         </Menu>
     )
 
     return <Menu mode="horizontal" >
+        <Menu.Item><img src={Logo}/></Menu.Item>
         <Menu.Item onClick={()=>{window.location.replace("/")}}><strong>Actuator XMS</strong></Menu.Item>
         <Menu.Item>Help & Support</Menu.Item>
         <Menu.Item style={{float:'right'}}>
             {loading?<Spin/>:user?
                 <Dropdown overlay={usermenu}>
-                        <li>{user.displayName}</li>
+                        <a  href="#/app">{user.displayName}</a>
                 </Dropdown>
             :
             <Button onClick={()=>handleSignIn()}><GoogleOutlined/>Sign In With Google</Button>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Typography, Popconfirm} from 'antd';
-import { DeleteOutlined, EditFilled} from '@ant-design/icons'
+import { DeleteOutlined, EditFilled, EyeFilled} from '@ant-design/icons'
 import { Link } from 'react-router-dom';
 
 const ExamCard = ({data,deleteExam})=>(
@@ -8,10 +8,11 @@ const ExamCard = ({data,deleteExam})=>(
         className="component-exam-card"
         actions={[
             <Link to={"/app/exam/update/"+data.id}><EditFilled/></Link>,
+            <Link to={"/exam/"+data.id}><EyeFilled/></Link>,
             <Popconfirm 
             title="Delete Exam?"
             placement="bottom"
-            onConfirm={()=>deleteExam()} >
+            onConfirm={()=>deleteExam(data.id)} >
                 <DeleteOutlined/>
             </Popconfirm>
         ]}
