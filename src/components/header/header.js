@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Button, Menu, Dropdown, Spin } from 'antd';
+import {Button, Menu, Dropdown, Spin, Avatar } from 'antd';
 import {withFirebase} from '../../firebase';
 import {GoogleOutlined,  LoginOutlined,  UserOutlined} from '@ant-design/icons';
 import Logo from '../../assets/images/favicon-32x32.png'
@@ -32,20 +32,20 @@ export default function Header({firebase}){
     }
 
     const usermenu = (
-        <Menu>
-            <Menu.Item><UserOutlined/>Profile</Menu.Item>
+        <Menu mode="inline">
+            <Menu.Item> <a  href="#/app/profile"><UserOutlined/> Profile</a></Menu.Item>
             <Menu.Item onClick = {()=>handleSignOut()}><LoginOutlined/>Logout</Menu.Item>
         </Menu>
     )
 
-    return <Menu mode="horizontal" >
-        <Menu.Item><img src={Logo}/></Menu.Item>
-        <Menu.Item onClick={()=>{window.location.replace("/")}}><strong>Actuator XMS</strong></Menu.Item>
+    return <Menu mode="horizontal" overflowedIndicator={<UserOutlined/>} >
+        <Menu.Item onClick={()=>{window.location.replace("/")}}><img src={Logo} alt="ActuatorXMS" 
+        style={{marginRight:"10px"}}/><strong>Actuator XMS</strong></Menu.Item>
         <Menu.Item>Help & Support</Menu.Item>
-        <Menu.Item style={{float:'right'}}>
+        <Menu.Item style={{float:'right'}} >
             {loading?<Spin/>:user?
-                <Dropdown overlay={usermenu}>
-                        <a  href="#/app">{user.displayName}</a>
+                <Dropdown  overlay={usermenu}>
+                        <a  href="#/app"><Avatar src={user.photoURL}/> {user.displayName}</a>
                 </Dropdown>
             :
             <Button onClick={()=>handleSignIn()}><GoogleOutlined/>Sign In With Google</Button>

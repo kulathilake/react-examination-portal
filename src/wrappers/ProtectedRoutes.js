@@ -25,16 +25,16 @@ function ProtectedRoutes({firebase,component:Component,props}){
     if(loading){
     return <Result icon={<Spin size="large"/>}/>
     }
-    if(true){
+    if(user){
         return (
-        <Fragment>
+        <div >
             <Breadcrumb style={{marginBottom:"20px"}}>
                 {location.pathname.split("/").map((i,k)=>{
                     return (<Breadcrumb.Item key={k}>{String(i).charAt(0).toUpperCase()+String(i).substr(1)}</Breadcrumb.Item>)
                 })}
             </Breadcrumb>
             <Component params={params} user={user} firebase={firebase}/>
-        </Fragment>)
+        </div>)
     }
     else{
         return <Result status="info" title="You Are Logged Out"/>

@@ -12,6 +12,8 @@ const LandingPageWrapped = React.lazy( ()=> import('./pages/landing/landingPage'
 const DashboardWrapped = React.lazy( ()=> import('./pages/dashboard/DashboardPage'));
 const CreateUpdateExam = React.lazy( ()=> import('./components/exam/CreateUpdateExamComponent'));
 const ViewExamination = React.lazy(( )=> import('./components/exam/ViewExamComponent'));
+const GradeExamination = React.lazy(()=> import('./components/grading/GradeExaminationComponent'));
+const ProfileComponent = React.lazy(()=> import('./components/profile/ProfileComponent'));
 function App() {
   return (
     <FirebaseContext.Provider value={new Firebase()}>
@@ -35,6 +37,12 @@ function App() {
                     </Route>
                     <Route path="/app/exam/update/:id" exact>
                         <ProtectedRoutesWrapped  component={CreateUpdateExam}/>
+                    </Route>
+                    <Route path="/app/exam/grade/:id" exact>
+                        <ProtectedRoutesWrapped  component={GradeExamination}/>
+                    </Route>
+                    <Route path="/app/profile/:uid?" exact>
+                        <ProtectedRoutesWrapped  component={ProfileComponent}/>
                     </Route>
                   </Switch>
               </Router>

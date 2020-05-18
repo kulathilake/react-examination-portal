@@ -84,7 +84,7 @@ class Firebase {
     candidateCredentialCheck = (id,email,otp) => {
         return this.app.firestore().collection(`exam-candidates`)
         .where("id","==",id)
-        .where("candidates","array-contains",{email:email,otp:otp}).get().then(res=>{
+        .where("candidates","array-contains",{email:email,otp:otp,published:true}).get().then(res=>{
             if(res.empty){
                 return false
             }
@@ -95,41 +95,36 @@ class Firebase {
     }
 
     invalidateCandidate = (id,email,otp) => {
-        return this.app.firestore().collection(`exam-candidates`)
-        .doc(id).update({
-            candidates: firebase.firestore.FieldValue.arrayRemove({email:email,otp:otp})
-        }).then(
-            res=>{
-                return res
-            }
-        )  
+       return new Promise((res)=>res())
     }
 
     // Update
-    updateExamination = ({id,data}) => {
-        //TODO
-    }
-
-    updateExamSchedule = ({id,schedule}) =>{
-        //TODO
-    }
-
-    updateExamPolicy = ({id,policies}) => {
-        //TODO
-    }
-
-    updateExamQuestions = (id,questions) => {
-        //TODO
-    } 
-
-    updateExamCandidates = (id,candidates) => {
-        //TODO
+    updateProfile(name,photo){
+        return this.auth.currentUser.updateProfile({
+            displayName:name,
+            photoURL:photo
+        })
     }
 
     //Delete
     deleteExamination = (id) => {
         return this.app.firestore().collection(`exam`).doc(id).update({delete:true})
     }
+
+    deleteUserAccount = () => {
+        return this.app.firestore().collection('DeleteLogs').doc('users').update({
+            [this.getUser().uid]:"QUEUED"
+        }).then(res=>{
+            this.auth.currentUser.delete().then(res=>{
+                return res
+            })
+            .catch(()=>this.auth.currentUser.reauthenticateWithPopup(new firebase.auth.GoogleAuthProvider()).then(()=>{
+                this.deleteUserAccount()
+            }))
+        })
+    }
+
+    
 
   }
    

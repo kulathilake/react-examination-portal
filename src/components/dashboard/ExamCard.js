@@ -1,19 +1,34 @@
 import React from 'react';
-import { Card, Typography, Popconfirm} from 'antd';
-import { DeleteOutlined, EditFilled, EyeFilled} from '@ant-design/icons'
+import { Card, Typography, Popconfirm, Tooltip} from 'antd';
+import { DeleteOutlined, EditFilled, EyeFilled, CheckCircleFilled} from '@ant-design/icons'
 import { Link } from 'react-router-dom';
 
 const ExamCard = ({data,deleteExam})=>(
     <Card 
         className="component-exam-card"
         actions={[
-            <Link to={"/app/exam/update/"+data.id}><EditFilled/></Link>,
-            <Link to={"/exam/"+data.id}><EyeFilled/></Link>,
+            <Tooltip
+            title="Edit"
+            placement="bottom"
+            >
+                <Link to={"/app/exam/update/"+data.id}><EditFilled/></Link>
+            </Tooltip>,
+            <Tooltip
+            title="Candidate View"
+            placement="bottom"
+            >
+                <Link to={"/exam/"+data.id}><EyeFilled/></Link>
+            </Tooltip>,
+            <Tooltip
+            title="Grade Exam"
+            placement="bottom">
+            <Link to={"/app/exam/grade/"+data.id}><CheckCircleFilled/></Link>
+            </Tooltip>,
             <Popconfirm 
             title="Delete Exam?"
             placement="bottom"
             onConfirm={()=>deleteExam(data.id)} >
-                <DeleteOutlined/>
+                <DeleteOutlined style={{color:"red"}}/>
             </Popconfirm>
         ]}
     >

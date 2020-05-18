@@ -2,6 +2,7 @@
 /* Layout */
 .site-layout-content {
     background-image: url("../images/container.svg");
+    background-color: rgb(149, 205, 240);
     padding: 24px;
     min-height:100vh;
     box-sizing: border-box;
@@ -20,7 +21,7 @@
     background-color: rgba(99, 169, 180, 0.686);
     margin: -24px;
     padding: 24px;
-    height: 100vh;
+    height: auto;
 }
 
 .landing-page-left{

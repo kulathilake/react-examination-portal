@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import 'moment-duration-format';
 import { withFirebase } from '../../firebase';
-import { Result, message, Row, Input, Col, Button, notification } from 'antd';
+import { Result, message, Row, Input, Col, Button, notification, Typography } from 'antd';
 import Loader from '../loader/loader';
 import ViewExaminationPage from '../../pages/exam/ViewExaminationPage';
 import { LockFilled } from '@ant-design/icons';
@@ -59,13 +59,18 @@ class ViewExamComponent extends React.Component{
                                         ?moment().date(state.date.date()).hour(state.start.hour()+state.duration.hour()).minute(state.start.minute()+state.duration.minute())
                                         :null
                                 }),()=>{
-
-                                    if(this.timeGate()){
+                                    this.firebase.fetchExamPolicy(this.id).then(res=>{
                                         this.setState({
-                                            credentialModal:true
+                                            policy:res.data()
+                                        },()=>{
+                                            if(this.timeGate()){
+                                                this.setState({
+                                                    credentialModal:true
+                                                })
+                                                // this.credentialCheck()
+                                            }
                                         })
-                                        // this.credentialCheck()
-                                    }
+                                    })
                                 })
                             })
                     }}
@@ -85,6 +90,9 @@ class ViewExamComponent extends React.Component{
      * @todo Implement websockets to listen to an ntdp
      */
     timeGate(){
+        if(!this.state.policy.TIME){
+                return true
+        }
         if(moment().isBefore(this.state.from)){
             this.setState({
                 OPEN:false,
@@ -101,6 +109,10 @@ class ViewExamComponent extends React.Component{
         }
         else{
             clearInterval(this.timer)
+
+            if(this.state.OPEN){
+                this.submitExamination();
+            }
             this.setState({
                 AFTER:true,
                 OPEN:false
@@ -115,15 +127,18 @@ class ViewExamComponent extends React.Component{
      */
     credentialCheck(){
         this.firebase.candidateCredentialCheck(this.id,this.state.candidate_email,this.state.candidate_otp).then(res=>{
-            console.log(res)
-            if(res){
-              
-                this.timer = setInterval(()=>{
-                    this.timeGate()
-                    this.setState((state)=>({
-                        timer: moment.duration(moment(this.state.to).subtract(moment())),
-                    }))
-                },1000)
+           
+            if(res){        
+                if(this.state.policy.TIME){
+                    this.timer = setInterval(()=>{
+                        this.timeGate()
+                        this.setState((state)=>({
+                            timer: moment.duration(moment(this.state.to).subtract(moment())),
+                        }))
+                    },1000)
+
+                }
+
                 this.setState({
                     OPEN:true,
                     UNAUTH:false,
@@ -180,19 +195,23 @@ class ViewExamComponent extends React.Component{
             notification.success({
                 message:"Your Answers have been successfully submitted"
             })
-            this.firebase.invalidateCandidate(this.id,this.state.candidate_email,this.state.candidate_otp).then(res=>{
-                console.log(res);
-                notification.info({
-                    message:"Your OTP is now expired, and can no longer be used to access this examination",
-                    onClose :() => {
-                        this.setState({
-                            OPEN:false,
-                            AFTER:true
-                        })
-                    }
-                    
-                })
+            this.setState({
+                OPEN:false,
+                AFTER:true
             })
+            // this.firebase.invalidateCandidate(this.id,this.state.candidate_email,this.state.candidate_otp).then(res=>{
+            //     console.log(res);
+            //     notification.info({
+            //         message:"Your OTP is now expired, and can no longer be used to access this examination",
+            //         onClose :() => {
+            //             this.setState({
+            //                 OPEN:false,
+            //                 AFTER:true
+            //             })
+            //         }
+                    
+            //     })
+            // })
         })
     }
 
@@ -201,44 +220,40 @@ class ViewExamComponent extends React.Component{
     
 
     render(){
-    if(this.state.credentialModal)return <Row justify="center">
+    if(this.state.credentialModal)return <Row justify="center" gutter={[24,24]}>
 
-            <Col md={8} className="component-content" style={{padding:"10px"}}>
-                <Row>
-                    <Result
-                        status="info"
-                        title="Provide your email and OTP"
-                        icon={<LockFilled/>}
-                        subTitle={<p>This examination can only be accessed by Candidates who have been registered by the examination owner.</p>}
-                    />
-                        <Input
-                        name="candidate_email"
-                        onChange={(e)=>this.handleCredentials(e)}
-                        placeholder="Your Email"/>
-                        <Input.Password
-                        name="candidate_otp"
-                        onChange={(e)=>this.handleCredentials(e)}
-                        placeholder="Your OTP"/>
-                        <Button 
-                        onClick={()=>this.credentialCheck()}
-                        type="primary">OK</Button>
-                </Row>
+        
+                        <Col md={8} sm={20} style={{textAlign:"center"}}>
+                            <Row>
+                            <h2><LockFilled/> Please Enter Your Credentials</h2>
+                            <Input
+                            name="candidate_email"
+                            onChange={(e)=>this.handleCredentials(e)}
+                            placeholder="Your Email"/>
+                            <Input.Password
+                            name="candidate_otp"
+                            onChange={(e)=>this.handleCredentials(e)}
+                            placeholder="Your OTP"/>
+                            <Button 
+                            style={{width:"100%"}}
+                            onClick={()=>this.credentialCheck()}
+                            type="primary">OK</Button>
+                            </Row>
+            
+
+                            <Row>
+                                <small>
+                                The One Time PIN (OTP) is found in the Email sent to you by the Examination Creator.
+                                If your OTP does not work, your candidacy may have been revoked. Please contact the Examination
+                                Owner
+                                </small>
+                            </Row>
+
+                        </Col>
+        
                 
         
-                <Row justify="center">
-                <small>
-                <p>
-                    If your OTP does not work, chances are, your candidacy may have been revoked by the owner of this examination. <br/>
-                    If you did not recieve an Email, 
-                    <ul>
-                        <li>You may be unauthorized to view and attempt this examination</li>
-                        <li>Or Something went wrong with the delivery of that email.</li>
-                    </ul>
-                    In any case, please contact the examination owner.
-                </p>
-                </small>
-                </Row>
-            </Col>
+
     
         </Row>
     if(this.state.UNAUTH) return <Result status="error" title="Unauthorized" subTitle={<Button onClick={()=>{
@@ -246,20 +261,20 @@ class ViewExamComponent extends React.Component{
             credentialModal:true
         })
     }}>Retry</Button>}/>    
+    if(this.state.NOT_FOUND)return <Result status="error" title="404" subTitle="Examination does not exist!!"/>
+    if(this.state.BEFORE) return <Result status="info" title="Examination Has not begun yet"/>
+    if(this.state.AFTER) return <Result status="info" title="Examination Ended."/>
     if(this.state.OPEN)return <ViewExaminationPage 
         title={this.state.title}
-        timer={this.state.timer&&this.state.timer.format("h [hrs], mm [min], ss [sec]")}
+        timer={this.state.timer&&this.state.timer}
         examQuestions = {this.state.examQuestions}
         credentialsModal={this.state.credentialModal}
         answers={this.state.answers}
         setAnswers={this.setAnswers.bind(this)}
         submitAnswers={this.submitExamination.bind(this)}
         />
-    
-    if(this.state.NOT_FOUND)return <Result status="error" title="404" subTitle="Examination does not exist!!"/>
-    if(this.state.BEFORE) return <Result status="info" title="Examination Has not begun yet"/>
-    if(this.state.AFTER) return <Result status="info" title="Examination Has Finished"/>
-    if(this.state.loading) return <Loader message={this.state.action_message}/>
+        
+        if(this.state.loading) return <Loader message={this.state.action_message}/>
     }
 
 }

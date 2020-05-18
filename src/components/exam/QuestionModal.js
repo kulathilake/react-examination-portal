@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Modal, Input} from 'antd';
 import uid from 'uid';
 
-const QuestionModal = ({setExamQuestion,question,setQuestion,active,setActive,update,setUpdate,updateExamQuestion})=>(
-    <Modal
+const QuestionModal = ({setExamQuestion,question,setQuestion,active,setActive,update,setUpdate,updateExamQuestion})=>{
+    
+    const [value,setValue] = useState(question)
+    return <Modal
     visible={active}
     onCancel={()=>{
         setQuestion(null);
@@ -11,19 +13,21 @@ const QuestionModal = ({setExamQuestion,question,setQuestion,active,setActive,up
     onOk ={()=>{
         if(update){
             //TODO: Create an Update method in CreateUpdateExamComponent
-            updateExamQuestion(update,question);
+            updateExamQuestion(update,value);
             setUpdate(null)
         }else{
-
-            setExamQuestion({id:uid(4),title:question})
+            setExamQuestion({id:uid(4),title:value})
         }
         
         ;setQuestion(null);setActive(false)}}
     title = {update?"Update Question":"Create New Question"}
     >
-        <Input.TextArea value={question}  onChange={(e)=>setQuestion(e.target.value)}maxLength={300} placeholder="Question Content. Max Length 300"/>
+        <Input.TextArea value={value}  
+        // onChange={(e)=>setQuestion(e.target.value)} 
+        onChange={(e)=>setValue(e.target.value)}
+        placeholder="Question Content"/>
 
     </Modal>
-)
+}
 
 export default QuestionModal;

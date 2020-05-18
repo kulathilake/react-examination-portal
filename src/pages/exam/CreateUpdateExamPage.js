@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import {Affix, Row,Col, PageHeader, Input, DatePicker,  Typography, Divider, TimePicker, Button,Table,Popconfirm, Switch, Statistic } from 'antd';
-import { PlusOutlined, EditFilled, DeleteFilled} from '@ant-design/icons';
+import React, { useState, Fragment } from 'react';
+import {Affix, Row,Col, PageHeader, Input, DatePicker,  Typography, Divider, TimePicker, Button,Table,Popconfirm, Switch, Modal, notification } from 'antd';
+import { PlusOutlined, EditFilled, DeleteFilled, MailOutlined, CheckCircleFilled} from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
-
+import email from '../../helpers/credentialsEmail';
 import QuestionModal from '../../components/exam/QuestionModal';
 import CandidateModal from '../../components/exam/CandidateModal';
+import moment from 'moment';
 
 export default function CreateUpdateExamPage({
+    id,
     examTitle,
     examDate,
     examStartTime,
@@ -29,15 +31,51 @@ export default function CreateUpdateExamPage({
     existing
 }){
     const history = useHistory();
-
+    console.log(examCandidates)
     const [questionModalState,setQuestionModalState] = useState(false);
     const [question,setQuestion] = useState(null)
     const [update,setUpdate] = useState(null);
 
     const [candidateModalState,setCandidateModalState] = useState(false);
     const [candidate,setCandidate] = useState(null);
+    const [publishModal,setPublishModal] = useState(false)
 
+    const getDate=()=>{
+        return moment().date(examDate.date()).hour(examStartTime.hour()).minute(examStartTime.minute()).toISOString()
+    }
 
+    const getUrl = () =>{
+        return `${window.location.origin}/#/exam/${id}`
+    }
+
+    const publishExam = () =>{
+        setPublishModal(true)
+
+        Promise.all(examCandidates.map(candidate=>{
+            if(!candidate.published){
+                window.Email.send({
+                    SecureToken:"2a2e24d2-bc4a-403e-b676-7f4483d4b869",
+                    To : candidate.email,
+                    From : "ActuatorApps@gmail.com",
+                    Subject : "Test",
+                    Body : email(examTitle,getUrl(),getDate(),candidate.email,candidate.otp)
+                }).then(res=>{
+                        if(res=="OK"){
+                            notification.success({
+                                message:`Delivered to ${candidate.email}`
+                            })
+                            candidate.published = true
+                            handleSaveExamination()
+                        }else{
+                            notification.error({
+                                message:`Delivery failed to ${candidate.email}`
+                            })
+                        }
+                })
+            }
+        }))
+
+    }
 
     return(
         <Row gutter={[24,24]}>
@@ -56,7 +94,7 @@ export default function CreateUpdateExamPage({
                     <Badge status={examQuestions.length?"success":"default"} text="Questions"/><br/>
                     <Badge status={examCandidates.length?"success":"default"} text="Candidates"/><br/>
                     <Badge status="default" text="Publish"/> */}
-                <Row gutter={24}>
+                {/* <Row gutter={24}>
                     <Col>
                     <Statistic title="Candidates"  value={examCandidates.length}/><br/>
                     </Col>
@@ -66,10 +104,10 @@ export default function CreateUpdateExamPage({
                     <Col>
                     <Statistic title="Credits" prefix="$" precision={2} value={100 - examCandidates.length}/><br/>
                     </Col>
-                </Row>
+                </Row> */}
                 <Row>
                     <Button onClick={()=>handleSaveExamination()} type="ghost">Save Exam</Button>
-                    <Button type="primary">Publish Exam</Button>
+                    <Button onClick={()=>publishExam()}type="primary">Publish Exam</Button>
                 </Row>
                 </div>
             </Affix>
@@ -117,6 +155,7 @@ export default function CreateUpdateExamPage({
                             </Popconfirm>
                             </>)}
                         />
+      
                     </Table>  
                     
                     <Button className="btn-add-float-question" type="primary"  size="large" 
@@ -135,15 +174,20 @@ export default function CreateUpdateExamPage({
                         <Table.Column title="Options" dataIndex="otp" key="otp" 
                             render={
                                 otp => (
+        
+
                                     <Popconfirm 
                                     title="Delete Candidate?"
                                     placement="bottom"
                                     onConfirm={()=>deleteExamCandidate(otp)} >
                                 <Button  type="dashed"><DeleteFilled/></Button>
                                 </Popconfirm>
+                                
+                  
                                 )
                             }
                         />
+                     
                     </Table>  
                     <Button onClick = {()=>setCandidateModalState(true)}
                     className="btn-add-float-question" type="primary"  size="large" >
@@ -170,6 +214,22 @@ export default function CreateUpdateExamPage({
                 active={candidateModalState}
                 setActive={setCandidateModalState}
             />
+
+            <Modal
+            visible={publishModal}
+            onOk={()=>{setPublishModal(false)}}
+            onCancel={()=>{setPublishModal(false)}}
+            title="Copy this link and Share with your Candidates"
+            centered
+            footer={
+            <Fragment>
+            </Fragment>
+        }
+        >   
+                <Input value={`${window.location.origin}/#/exam/${id}`}/>
+        <small>Please securely distribute each of the generated OTPs to respective candidates</small>
+        
+            </Modal>
         </Row>
     )
 

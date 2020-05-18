@@ -2,7 +2,6 @@ import React from 'react';
 import CreateUpdateExamPage from '../../pages/exam/CreateUpdateExamPage';
 import uid from 'uid';
 import { message
-
  } from 'antd';
 import {withFirebase} from '../../firebase';
 import moment from 'moment';
@@ -88,7 +87,6 @@ export class CreateUpdateExamComponent extends React.Component{
     
     
     componentDidUpdate(){
-        console.log(this.state.examPolicy)
         if(this.state.action_progress){
             message.loading(this.state.action_message,0.5)
         }
@@ -195,13 +193,15 @@ export class CreateUpdateExamComponent extends React.Component{
             message.success("Question Updated")
         })
     }
-        
+
+ 
     render(){
         if(this.state.loading){
            return <Loader message={this.state.action_message}/>
         }
         return(
                 <CreateUpdateExamPage 
+        id={this.state.examId}        
         examTitle = {this.state.title}
         examDate = {this.state.date}
         examStartTime = {this.state.start}
