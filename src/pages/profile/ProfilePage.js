@@ -1,5 +1,5 @@
-import React, { Fragment, useState } from 'react'
-import { Row, Avatar, Typography, Col, Button, Popconfirm, Divider, Statistic, Descriptions, Modal } from 'antd'
+import React, {  useState } from 'react'
+import { Row, Avatar, Typography, Col, Button, Popconfirm, Divider, Descriptions, Modal } from 'antd'
 import { DollarOutlined } from '@ant-design/icons'
 
 export default function ProfilePage({user,credits,deleteUser}){
@@ -27,18 +27,19 @@ export default function ProfilePage({user,credits,deleteUser}){
 
             <Divider/>
 
-            <Row justify="center">
-                <Descriptions title="Credits" layout="vertical">
+            {/* <Row justify="center">
+         
+                <Descriptions title={<Button type="primary" onClick={()=>setBuy(true)}><DollarOutlined/>Buy Credits</Button>} layout="vertical">
             <Descriptions.Item  label="Credit Balance">{credits?.balance||"100.00"}</Descriptions.Item>
             <Descriptions.Item label="Rate">{credits?.currency+credits?.rate+"/Credit"}</Descriptions.Item>
             <Descriptions.Item label="Currency">{credits?.currency||"USD"}</Descriptions.Item>
                 </Descriptions>
-                    <Button type="primary" onClick={()=>setBuy(true)}><DollarOutlined/>Buy Credits</Button>
+                   
             </Row>
                 
-            <Divider/>
+            <Divider/> */}
            {/* <Typography.Text type="danger">Danger Zone</Typography.Text> */}
-            <Row justify="start">
+            <Row justify="center">
                 <Popconfirm
                 title="You are about to Delete Your account. This action cannot be undone. Proceed?"
                 onConfirm={()=>deleteUser()}

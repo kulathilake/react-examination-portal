@@ -10,6 +10,7 @@ const CandidateModal = ({setExamCandidates,active,setActive,candidate,setCandida
     onCancel={()=>setActive(false)}
     onOk ={()=>
         {
+            setValue(null)
             setExamCandidates({email:value,otp:uid(5)});
             setCandidate(null)
             setActive(false);

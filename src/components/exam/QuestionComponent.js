@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Typography, Input,   message, Statistic, Divider, Button } from 'antd';
 function noCutCopyPaste(e){e.preventDefault();message.info("Clipboard functions are not allowed!")}
 
 export default ({id,title,answers,setAnswer})=>{
 const [value,setValue] = useState(answers[id])
-useEffect(()=>{
-        setValue(answers[id])
-},[answers[id]])
+// useEffect(()=>{
+//         setValue(answers[id])
+// },[answers[id]])
  return   <Input.Group>
-    <Typography.Text    
+    <Typography.Text  
+    
+    className="question-text"
         onDragStart={e=>noCutCopyPaste(e)}
     onCopy={e=>noCutCopyPaste(e)}
     strong

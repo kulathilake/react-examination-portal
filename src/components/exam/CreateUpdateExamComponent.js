@@ -188,7 +188,12 @@ export class CreateUpdateExamComponent extends React.Component{
 
     updateExamQuestion = (id,title) => {
         this.setState((state)=>({
-            questions: state.questions.filter(item=>{return item.id!==id}).concat({id:id,title:title})
+            questions: state.questions.filter(item=>{if(item.id===id){
+                item.title = title;
+            }
+            return item
+        })
+            // .concat({id:id,title:title})
         }),()=>{
             message.success("Question Updated")
         })
@@ -199,6 +204,7 @@ export class CreateUpdateExamComponent extends React.Component{
         if(this.state.loading){
            return <Loader message={this.state.action_message}/>
         }
+        console.log(this.state.questions)
         return(
                 <CreateUpdateExamPage 
         id={this.state.examId}        

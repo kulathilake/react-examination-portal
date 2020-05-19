@@ -7,14 +7,21 @@ class Firebase {
     constructor() {
       this.app = firebase.initializeApp(dev);
       this.auth = firebase.auth()
+      this.app.firestore().enablePersistence()
+    .catch(e=>{throw e})
     }
 
     getUser = () =>{
-        return this.auth.currentUser    
+        return this.auth.currentUser
     }
+
 
     signInWithRedirect = () =>{
         return this.auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider())
+    }
+
+    signInWithPopup = () =>{
+        return this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
     }
 
     signOut = () =>{

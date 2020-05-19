@@ -17,15 +17,17 @@ const ProfileComponent = React.lazy(()=> import('./components/profile/ProfileCom
 function App() {
   return (
     <FirebaseContext.Provider value={new Firebase()}>
+            <Router>
       <div className="App">
           <Layout className="layout">
+            {  true&&
             <Header style={{padding:"0px"}}>
               <HeaderWrapped/>
             </Header>
+            }
             <Content>
             <div className="site-layout-content">
         <Suspense fallback={<Loader/>}>
-              <Router>
                   <Switch>
                     <Route path="/" exact component={LandingPageWrapped} />
                     <Route path="/exam/:id" exact render={props=><ViewExamination {...props.match.params}/>} />
@@ -44,14 +46,20 @@ function App() {
                     <Route path="/app/profile/:uid?" exact>
                         <ProtectedRoutesWrapped  component={ProfileComponent}/>
                     </Route>
+          
                   </Switch>
-              </Router>
         </Suspense>
               </div>
             </Content>
-            <Footer className="site-layout-footer">ActutatorXMS ©{new Date().getFullYear()} <br/><GithubFilled/> <a href="http://www.github.com/shehankule">shehankule</a></Footer>
+            <Footer className="site-layout-footer">ActutatorXMS ©{new Date().getFullYear()} <br/><GithubFilled/> <a href="http://www.github.com/shehankule">shehankule</a>
+            <br/>
+            <div>
+            <a href="https://www.freepik.com/free-photos-vectors/banner">Banner vector created by freepik - www.freepik.com</a>
+            </div>
+            </Footer>
           </Layout>
       </div>
+              </Router>
     </FirebaseContext.Provider>
   );
 }

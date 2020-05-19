@@ -5,36 +5,36 @@ import { Link } from 'react-router-dom';
 
 const ExamCard = ({data,deleteExam})=>(
     <Card 
-        className="component-exam-card"
+        className="component-exam-card swing-in-top-fwd"
         actions={[
             <Tooltip
             title="Edit"
             placement="bottom"
             >
-                <Link to={"/app/exam/update/"+data.id}><EditFilled/></Link>
+                <Link to={"/app/exam/update/"+data?.id}><EditFilled/></Link>
             </Tooltip>,
             <Tooltip
             title="Candidate View"
             placement="bottom"
             >
-                <Link to={"/exam/"+data.id}><EyeFilled/></Link>
+                <Link to={"/exam/"+data?.id}><EyeFilled/></Link>
             </Tooltip>,
             <Tooltip
             title="Grade Exam"
             placement="bottom">
-            <Link to={"/app/exam/grade/"+data.id}><CheckCircleFilled/></Link>
+            <Link to={"/app/exam/grade/"+data?.id}><CheckCircleFilled/></Link>
             </Tooltip>,
             <Popconfirm 
             title="Delete Exam?"
             placement="bottom"
-            onConfirm={()=>deleteExam(data.id)} >
+            onConfirm={()=>deleteExam(data?.id)} >
                 <DeleteOutlined style={{color:"red"}}/>
             </Popconfirm>
         ]}
     >
-        <div style={{height:"102px"}}>
+        <div style={{height:"102px"}} className="component-exam-card-content">
 
-        <Typography.Title level={3}>  {data.title||"Untitled"}</Typography.Title>
+        <Typography.Title level={3}>  {data?.title||"Untitled"}</Typography.Title>
         </div>
     
     </Card>

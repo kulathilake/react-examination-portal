@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import moment from 'moment';
 import 'moment-duration-format';
 import { withFirebase } from '../../firebase';
-import { Result, message, Row, Input, Col, Button, notification, Typography } from 'antd';
+import { Result, message, Row, Input, Col, Button, notification } from 'antd';
 import Loader from '../loader/loader';
 import ViewExaminationPage from '../../pages/exam/ViewExaminationPage';
 import { LockFilled } from '@ant-design/icons';
+import OwnersViewRibbon from './OwnersViewRibbon';
 
 class ViewExamComponent extends React.Component{
     constructor({firebase,...rest}){
@@ -36,7 +37,11 @@ class ViewExamComponent extends React.Component{
         this.firebase.fetchExamTitle(this.id).then(res => {
             if(res.data()){
                 if(res.data().delete) {this.setState({NOT_FOUND:true}); return null}
-                this.setState({title:res.data().title,action_message:"Loading Examination Schedule"})
+                this.setState({
+                    title:res.data().title,
+                    OWNVIEW:this.firebase.getUser().uid===res.data().owner,
+                    action_message:"Loading Examination Schedule"})
+
                 this.firebase.fetchExamSchedule(this.id).then(res=>
                     {if(res.data()){
                         this.setState({
@@ -58,22 +63,46 @@ class ViewExamComponent extends React.Component{
                                     to: state.date&&state.start&&state.duration
                                         ?moment().date(state.date.date()).hour(state.start.hour()+state.duration.hour()).minute(state.start.minute()+state.duration.minute())
                                         :null
-                                }),()=>{
-                                    this.firebase.fetchExamPolicy(this.id).then(res=>{
-                                        this.setState({
-                                            policy:res.data()
-                                        },()=>{
-                                            if(this.timeGate()){
-                                                this.setState({
-                                                    credentialModal:true
-                                                })
-                                                // this.credentialCheck()
-                                            }
-                                        })
-                                    })
                                 })
+                                
+                                // ,()=>{
+                                //     if(this.timeGate()){
+                                //         this.setState({
+                                //             credentialModal:true
+                                //         })
+                                //         // this.credentialCheck()
+                                //     }
+
+                                // }
+                                )
                             })
-                    }}
+                    }
+
+                    this.firebase.fetchExamPolicy(this.id).then(res=>{
+                        this.setState({
+                            action_message:"Fetching Policies",
+                            policy:res.data()
+                        },()=>{
+                            if(this.timeGate()){
+                                if(this.state.OWNVIEW){
+                                    this.setState({
+                                        OPEN:true,
+                                        UNAUTH:false,
+                                        credentialModal:false
+                                    },()=>{
+                                        this.loadQuestions();
+                                    })
+                                }else{
+
+                                    this.setState({
+                                        credentialModal:true
+                                    })}
+                                }
+       
+                        })
+                    })
+                
+                }
                 )
                 .catch(e=>{
                     
@@ -90,7 +119,7 @@ class ViewExamComponent extends React.Component{
      * @todo Implement websockets to listen to an ntdp
      */
     timeGate(){
-        if(!this.state.policy.TIME){
+        if(!this.state.policy.TIME||this.state.OWNVIEW){
                 return true
         }
         if(moment().isBefore(this.state.from)){
@@ -190,6 +219,10 @@ class ViewExamComponent extends React.Component{
         })
     }
     submitExamination(){
+        if(this.state.OWNVIEW){
+            message.error("You cannot submit Answers as you are the owner of this Examination")
+            return true
+        }
         this.firebase.createCandidateAnswers(this.id,this.state.candidate_email,this.state.answers).then(res=>{
             console.log(res)
             notification.success({
@@ -264,7 +297,12 @@ class ViewExamComponent extends React.Component{
     if(this.state.NOT_FOUND)return <Result status="error" title="404" subTitle="Examination does not exist!!"/>
     if(this.state.BEFORE) return <Result status="info" title="Examination Has not begun yet"/>
     if(this.state.AFTER) return <Result status="info" title="Examination Ended."/>
-    if(this.state.OPEN)return <ViewExaminationPage 
+    if(this.state.OPEN)return <Fragment>
+        {this.state.OWNVIEW&&
+        <OwnersViewRibbon/>
+        }
+
+    <ViewExaminationPage 
         title={this.state.title}
         timer={this.state.timer&&this.state.timer}
         examQuestions = {this.state.examQuestions}
@@ -274,6 +312,7 @@ class ViewExamComponent extends React.Component{
         submitAnswers={this.submitExamination.bind(this)}
         />
         
+        </Fragment>
         if(this.state.loading) return <Loader message={this.state.action_message}/>
     }
 

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import {Row,Col,Affix,Button, Statistic, Tree, Divider, Spin, Typography, message } from 'antd';
+import React, { useState } from 'react';
+import {Row,Col,Affix,Button, Statistic, Tree, Divider, Spin, Typography } from 'antd';
 import {InfoCircleFilled} from'@ant-design/icons';
 import Question from '../../components/exam/QuestionComponent';
 export default function CreateUpdateExamPage({
@@ -28,7 +28,7 @@ export default function CreateUpdateExamPage({
                     <Statistic 
                     title="Time Remaining" 
                     valueStyle={timer&&timer.asMinutes()<10?{color:"red"}:null}
-                    value={timer&&timer.format("h [hrs], mm [min], ss [sec]") ||"∞ hrs, ∞ mins, ∞ secs "}/>
+                    value={timer?timer.format("h [hrs], mm [min], ss [sec]"):"∞ hrs, ∞ mins, ∞ secs "}/>
                     <Button 
                     onClick={()=>submitAnswers()}
                     type="primary">Submit Answers</Button>

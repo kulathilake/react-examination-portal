@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Row, Col, PageHeader, Typography, Select, InputNumber, Statistic, Button, Divider, Affix } from 'antd';
+import { Row, Col, PageHeader, Typography, Select, InputNumber, Statistic, Button,  Affix } from 'antd';
 import { useHistory } from 'react-router-dom';
 import AnswerComponent from '../../components/grading/AnswerComponent';
 import { MailOutlined } from '@ant-design/icons';
@@ -87,9 +87,9 @@ export default function GradeExainationPage({
 
                     <Col md={18}>
                         <AnswerComponent
-                        title ={currentQuestion.title}
-                        answer ={currentScript[currentQuestion.id]}
-                        mark ={currentScript[currentQuestion.id]?.mark}
+                        title ={currentQuestion?.title}
+                        answer ={currentScript[currentQuestion?.id]}
+                        mark ={currentScript[currentQuestion?.id]?.mark}
                         />
                     </Col>
 
@@ -99,7 +99,7 @@ export default function GradeExainationPage({
                     value={currentQuestion?.title}
                     onSelect={(value)=>{setCurrentQuestion(questions[value])}}
                     style={{width:"100%"}}
-                    placeholder="Select a Candidate"
+                    placeholder="Select Question"
                     filterOption={(input, option) =>
                         option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                       }
@@ -111,8 +111,8 @@ export default function GradeExainationPage({
                
                    <label>Award Marks</label><br/>
                    <InputNumber
-                   value={marks[currentQuestion.id]}
-                   onChange={value=>setMark(currentQuestion.id,value)}
+                   value={marks[currentQuestion?.id]}
+                   onChange={value=>setMark(currentQuestion?.id,value)}
                    />
                     </Col>
                 </Row>

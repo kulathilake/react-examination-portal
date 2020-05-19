@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import 'antd/dist/antd.css'
 import './assets/css/app.css'
+import './assets/css/animasta.css'
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(

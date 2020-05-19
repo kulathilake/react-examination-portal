@@ -40,7 +40,7 @@ export default class GradeExaminationComponent extends React.Component{
                             action_message:null,
                             loading:false
                         },()=>{
-                            this.setCurrentCandidate(this.state.candidates[0].email)
+                            this.setCurrentCandidate(this.state.candidates[0]?.email)
                         })
                     })
                 })
@@ -74,9 +74,17 @@ export default class GradeExaminationComponent extends React.Component{
     }
 
     getCurrentScript(){
+        if(!this.state.currentCandidate){
+            this.setState({
+                currentScript:{},
+                marks:{},
+                loading:false,
+                action_message:"Loading Script"
+            })
+            return false
+        }
         this.firebase.fetchCandidateAnswers(this.id,this.state.currentCandidate).then(res=>{
             if(res.exists){
-                console.log(this.state.currentCandidate,res.data())
                 this.setState({
                     currentScript:res.data(),
                     marks:res.data().marks?res.data().marks:{},

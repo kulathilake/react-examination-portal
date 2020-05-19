@@ -1,6 +1,6 @@
 import React from 'react';
 import ProfilePage from '../../pages/profile/ProfilePage';
-import { message, notification } from 'antd';
+import { notification } from 'antd';
 
 
 export default class ProfileComponent extends React.Component{

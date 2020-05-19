@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from 'react';
 import {Affix, Row,Col, PageHeader, Input, DatePicker,  Typography, Divider, TimePicker, Button,Table,Popconfirm, Switch, Modal, notification } from 'antd';
-import { PlusOutlined, EditFilled, DeleteFilled, MailOutlined, CheckCircleFilled} from '@ant-design/icons';
+import { PlusOutlined, EditFilled, DeleteFilled} from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import email from '../../helpers/credentialsEmail';
 import QuestionModal from '../../components/exam/QuestionModal';
@@ -31,7 +31,6 @@ export default function CreateUpdateExamPage({
     existing
 }){
     const history = useHistory();
-    console.log(examCandidates)
     const [questionModalState,setQuestionModalState] = useState(false);
     const [question,setQuestion] = useState(null)
     const [update,setUpdate] = useState(null);
@@ -41,7 +40,11 @@ export default function CreateUpdateExamPage({
     const [publishModal,setPublishModal] = useState(false)
 
     const getDate=()=>{
-        return moment().date(examDate.date()).hour(examStartTime.hour()).minute(examStartTime.minute()).toISOString()
+        if(examPolicy.TIME){
+            return moment().date(examDate.date()).hour(examStartTime.hour()).minute(examStartTime.minute()).toISOString()
+        }else{
+            return null
+        }
     }
 
     const getUrl = () =>{
@@ -53,14 +56,14 @@ export default function CreateUpdateExamPage({
 
         Promise.all(examCandidates.map(candidate=>{
             if(!candidate.published){
-                window.Email.send({
+                return window.Email.send({
                     SecureToken:"2a2e24d2-bc4a-403e-b676-7f4483d4b869",
                     To : candidate.email,
                     From : "ActuatorApps@gmail.com",
-                    Subject : "Test",
+                    Subject : examTitle,
                     Body : email(examTitle,getUrl(),getDate(),candidate.email,candidate.otp)
                 }).then(res=>{
-                        if(res=="OK"){
+                        if(res==="OK"){
                             notification.success({
                                 message:`Delivered to ${candidate.email}`
                             })
@@ -72,6 +75,8 @@ export default function CreateUpdateExamPage({
                             })
                         }
                 })
+            }else{
+                return []
             }
         }))
 
@@ -159,7 +164,8 @@ export default function CreateUpdateExamPage({
                     </Table>  
                     
                     <Button className="btn-add-float-question" type="primary"  size="large" 
-                        onClick={()=>setQuestionModalState(true)}
+                        onClick={()=>{
+                            setQuestionModalState(true)}}
                     >
                     Add Questions            
                         <PlusOutlined/>

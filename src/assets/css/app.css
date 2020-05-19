@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Squada+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@1,300&display=swap");
 
 /* Layout */
 .site-layout-content {
@@ -11,19 +13,23 @@
 .site-layout-footer{ 
     text-align: center;
     color: white;
-    background-color: rgb(119, 115, 115);
+    background-color: #363639;
     bottom: 0px;
     width:100%;
     /* position: static; */
 }
 
 .landing-page-container{
-    background-color: rgba(99, 169, 180, 0.686);
+    background: rgba(54,54,57,0.6);
+    background: -moz-linear-gradient(0deg, rgba(54,54,57,1) 0%, rgba(124, 187, 219, 0.4) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(54,54,57,1) 0%, rgba(124, 187, 219, 0.4)  100%);
+    background: linear-gradient(0deg, rgba(54,54,57,1) 0%, rgba(124, 187, 219, 0.4)  100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#363639",endColorstr="#ffffff",GradientType=1); 
     margin: -24px;
     padding: 24px;
     height: auto;
 }
-
+c
 .landing-page-left{
     background-image: url("../images/standing.png");
     background-repeat: no-repeat;
@@ -43,6 +49,24 @@
     width: 100%;
     background-color:rgba(137, 197, 204, 0.837);
     box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+}
+.component-exam-card-content{
+    overflow: hidden;
+    overflow-wrap: break-word;
+
+}
+
+ .new {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    /* font-family: 'Josefin Sans', sans-serif; */
+}
+.new h3{
+    margin-top: 10px;
+    line-height: 100%;
 }
 
 .component-exam-card:hover{
@@ -70,6 +94,82 @@ box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.19);
 }
 
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
+
+
+.right{
+    text-align: right;
+}
+.landing-page-subtitle{
+    text-align: center;
+}
+.landing-page-subtitle h2{
+    text-align: center;
+    text-transform: uppercase;   
+    font-family: 'Squada One', cursive;
+    color:white;
+    font-size:xx-large ;
+}
+
+.landing-page-sub-section{
+    background-repeat: no-repeat;
+    background-size:contain;
+    /* line-height: 150px; */
+} 
+
+.landing-page-sub-section-content{
+    opacity: 1;
+    font-family: 'Josefin Sans', sans-serif;
+    height:auto
+}
+.landing-page-sub-section-content h2{
+    padding-top: 50px;
+    text-transform: uppercase;   
+    font-family: 'Squada One', cursive;
+    color:white;
+}
+
+.landing-page-features{
+    margin-top: 50px;
+    text-align: center;
+}
+
+.landing-page-features-item .ant-descriptions-item-label{
+    text-transform: uppercase;   
+    /* font-family: 'Squada One', cursive; */
+    font-size: larger;
+    color: white;
+}
+
+.landing-page-features-content{
+    font-family: 'Josefin Sans', sans-serif;
+    color:white;
+    padding: 10px;
+}
+
+.for-educators{
+    background-image: url("../images/text38872.png");
+}
+
+.for-trainers{
+    background-image: url("../images/text38873.png");
+}
+
+.question-text{
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+.top-ribbon{
+    margin-bottom: 20px;
+    background-color: #43C6DB;
+    margin-top:0px;
+}
+
 
 
 
@@ -80,16 +180,16 @@ box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
 }
 
 .btn-add-float{
-    scale:150%;
-    position: absolute;
-    right: 5%;
-    bottom: 50px;
-    transform: rotateZ("12")
+    width: 30px;
+
 }
 
+
+
 .btn-add-float:hover{
-    scale:180%;
+    scale:120%;
 }
+
 
 
 .btn-add-float-question{
@@ -98,6 +198,7 @@ box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
     position: absolute;
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.19);
 }
+
 
 .btn-add-float-question:active{
     scale:85%;
