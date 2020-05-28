@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Row, Col, PageHeader, Typography, Select, InputNumber, Statistic, Button,  Affix } from 'antd';
+import { Row, Col, PageHeader, Typography,Spin, Select, InputNumber, Statistic, Button,  Affix ,Tree, Divider} from 'antd';
 import { useHistory } from 'react-router-dom';
 import AnswerComponent from '../../components/grading/AnswerComponent';
-import { MailOutlined } from '@ant-design/icons';
+import { MailOutlined,InfoCircleFilled,SaveOutlined, CheckCircleFilled } from '@ant-design/icons';
 
 export default function GradeExainationPage({
     title,
@@ -18,7 +18,8 @@ export default function GradeExainationPage({
 }){
     const history = useHistory();
     const [currentQuestion,setCurrentQuestion] = useState(questions[0])
-    
+    const [value,setValue] = useState();
+        console.log(marks)
     const totalMarks = Object.values(marks).reduce((a,b)=>{
         if(b){
             return a+b
@@ -29,7 +30,7 @@ export default function GradeExainationPage({
 
     const completion = Object.values(marks).reduce((a,b)=>{
         console.log(b)
-        if(b&&String(b).length>0){return a+1}
+        if(b!==null&&String(b).length>0){return a+1}
    
         else{return a+0}
     },0)
@@ -85,7 +86,7 @@ export default function GradeExainationPage({
 
               <Row>
 
-                    <Col md={18}>
+              <Col md={18} sm={24} xs={24} >
                         <AnswerComponent
                         title ={currentQuestion?.title}
                         answer ={currentScript[currentQuestion?.id]}
@@ -93,27 +94,53 @@ export default function GradeExainationPage({
                         />
                     </Col>
 
-                    <Col md={6} style={{backgroundColor:"rgba(103,159,169,0.3)",margin:"0px",padding:"10px",width:"100%",height:"100%",}}>
-                    <label>Select Question</label>
-                <Select
-                    value={currentQuestion?.title}
-                    onSelect={(value)=>{setCurrentQuestion(questions[value])}}
-                    style={{width:"100%"}}
-                    placeholder="Select Question"
-                    filterOption={(input, option) =>
-                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                      }
-                >
-                    {questions?.map((q,k)=>{
-                        return<Select.Option key={k} value={k}>{q.title}</Select.Option>
-                    })}
-                </Select>
+                    <Col md={6} sm={24} style={{margin:"0px",padding:"10px",width:"100%",height:"100%",}}>
+                    <Row justify="center" gutter={[24,12]}>
+                        <Col >
+                            <label>Award Marks</label><br/>
+                            <InputNumber
+                            value={marks[currentQuestion?.id]}
+                            onChange ={value=>setValue(value)}
+                            />
+                            <Button  type="primary" onClick={()=>setMark(currentQuestion?.id,value)}><SaveOutlined/>Save</Button>
+                        </Col>
+                        <Divider/>
+                        <Col style={{overflowY:"scroll",maxHeight:"40vh"}}>
+                        <Tree 
+                    defaultExpandAll
+                    showLine={true}
+                    showIcon={true}
+                    onSelect={(key)=>{
+                        setCurrentQuestion(questions[parseInt(key[0]&&key[0].split("-")[1])])}}
+                    style={{width:"100%",backgroundColor:"none"}}
+                    autoExpandParent={true}
+                    >
+                        
+                        <Tree.TreeNode 
+                            title={title+" Outline"} 
+                            isStart={true} 
+                            selectable={false}
+                            key={"0"}
+                            children={
+                            questions.length?questions?.map((question,key)=>{
+                                return <Tree.TreeNode  switcherIcon={marks[question.id]!==undefined?
+                                <CheckCircleFilled style={{color:"green"}} />:
+                                <InfoCircleFilled/>
+                                } isLeaf={true} key={"0-"+key}  
+                                title={String(question.title).slice(0,15).concat("...")}/>
+                            }):<Spin/>
+                        }/>
+                        
+                    </Tree>
+                        </Col>
+
+
+                    </Row>
+
+                         
+                
                
-                   <label>Award Marks</label><br/>
-                   <InputNumber
-                   value={marks[currentQuestion?.id]}
-                   onChange={value=>setMark(currentQuestion?.id,value)}
-                   />
+                
                     </Col>
                 </Row>
  

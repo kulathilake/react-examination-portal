@@ -3,14 +3,14 @@ import {withFirebase} from '../../firebase'
 import { Row,Col, Spin, Button,  message,  Card, notification } from 'antd';
 import ExamCard from '../../components/dashboard/ExamCard.js';
 import { PlusOutlined } from '@ant-design/icons';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function Dashboard({firebase}){
 
     const [exams,setExams] = useState([])
     const [loading,setLoading] = useState(true)
-    const [tutorial,setTutorial] = useState(false)
-    const history= useHistory();
+    // const [tutorial,setTutorial] = useState(false)
+    // const history= useHistory();
 
     useEffect(()=>{
         firebase.fetchExamList().then(res=>{

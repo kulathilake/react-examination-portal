@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Row,Col,Affix,Button, Statistic, Tree, Divider, Spin, Typography } from 'antd';
+import {Row,Col,Button, Statistic, Tree, Divider, Spin, Typography } from 'antd';
 import {InfoCircleFilled} from'@ant-design/icons';
 import Question from '../../components/exam/QuestionComponent';
 export default function CreateUpdateExamPage({
@@ -19,7 +19,7 @@ export default function CreateUpdateExamPage({
                 onBack={()=>history.push("/app")}
                 title={existing?"Update Exam":"New Exam"}/>  */}
                 
-            <Affix  offsetTop={10}>
+
                 <div style={{padding:"10px"}}className="component-content">  
                 <label>Examination Title</label>
                 <Typography.Title level={2}>{title}</Typography.Title>
@@ -35,7 +35,7 @@ export default function CreateUpdateExamPage({
                     <Divider/>
                 </Row>
                 <Row>
-                    <Col md={24}>                    
+                    <Col md={24} sm={24} xs={24}>                    
                     <Tree 
                     defaultExpandAll
                     showLine={true}
@@ -54,7 +54,7 @@ export default function CreateUpdateExamPage({
                             children={
                             examQuestions.length?examQuestions?.map((question,key)=>{
                                 return <Tree.TreeNode  switcherIcon={<InfoCircleFilled/>} isLeaf={true} key={"0-"+key}  
-                                title={String(question.title).slice(10).concat("...")}/>
+                                title={String(question.title).slice(0,20).concat("...")}/>
                             }):<Spin/>
                         }/>
                         
@@ -62,7 +62,6 @@ export default function CreateUpdateExamPage({
                     </Col>
                 </Row>
                 </div>
-            </Affix>
                 
             </Col>
               <Col className="component-content" xs={24} sm={24} md ={16}>

@@ -1,6 +1,6 @@
 import React, {  useState } from 'react'
-import { Row, Avatar, Typography, Col, Button, Popconfirm, Divider, Descriptions, Modal } from 'antd'
-import { DollarOutlined } from '@ant-design/icons'
+import { Row, Avatar, Typography, Col, Button, Popconfirm, Divider,  Modal } from 'antd'
+// import { DollarOutlined } from '@ant-design/icons'
 
 export default function ProfilePage({user,credits,deleteUser}){
 

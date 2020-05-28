@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import {Affix, Row,Col, PageHeader, Input, DatePicker,  Typography, Divider, TimePicker, Button,Table,Popconfirm, Switch, Modal, notification } from 'antd';
+import { Row,Col, PageHeader, Input, DatePicker,  Typography, Divider, TimePicker, Button,Table,Popconfirm, Switch, Modal, notification } from 'antd';
 import { PlusOutlined, EditFilled, DeleteFilled} from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import email from '../../helpers/credentialsEmail';
@@ -40,7 +40,7 @@ export default function CreateUpdateExamPage({
     const [publishModal,setPublishModal] = useState(false)
 
     const getDate=()=>{
-        if(examPolicy.TIME){
+        if(examPolicy.TIME&&examDate&&examStartTime){
             return moment().date(examDate.date()).hour(examStartTime.hour()).minute(examStartTime.minute()).toISOString()
         }else{
             return null
@@ -51,9 +51,7 @@ export default function CreateUpdateExamPage({
         return `${window.location.origin}/#/exam/${id}`
     }
 
-    const publishExam = () =>{
-        setPublishModal(true)
-
+    const publishExam = () =>{  
         Promise.all(examCandidates.map(candidate=>{
             if(!candidate.published){
                 return window.Email.send({
@@ -68,7 +66,7 @@ export default function CreateUpdateExamPage({
                                 message:`Delivered to ${candidate.email}`
                             })
                             candidate.published = true
-                            handleSaveExamination()
+                            
                         }else{
                             notification.error({
                                 message:`Delivery failed to ${candidate.email}`
@@ -79,6 +77,10 @@ export default function CreateUpdateExamPage({
                 return []
             }
         }))
+        .then(()=>{
+            // setPublishModal(true)
+            handleSaveExamination();
+        })
 
     }
 
@@ -90,7 +92,7 @@ export default function CreateUpdateExamPage({
                 onBack={()=>history.push("/app")}
                 title={existing?"Update Exam":"New Exam"}/> 
                 
-            <Affix  offsetTop={10}>
+            
                 <div style={{padding:"10px"}}className="component-content">
          
                     {/* <Badge status={examTitle?"success":"default"} text="Basic Information"/><br/>
@@ -115,7 +117,7 @@ export default function CreateUpdateExamPage({
                     <Button onClick={()=>publishExam()}type="primary">Publish Exam</Button>
                 </Row>
                 </div>
-            </Affix>
+  
                 
             </Col>
 

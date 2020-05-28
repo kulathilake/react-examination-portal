@@ -98,6 +98,10 @@ export class CreateUpdateExamComponent extends React.Component{
             action_message:"Saving Examination"
         })
         if(this.state.title){
+            if(this.state.examPolicy.TIME&&!this.state.data&&!this.state.start){
+                message.error("Exam Policy Requires Scheduling Details")
+                return false
+            }
             Promise.all([
                this.firebase.createExamination(this.state.examId,{title:this.state.title}),
                this.firebase.createExamQuestions(this.state.examId,{questions:this.state.questions}),

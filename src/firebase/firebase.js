@@ -7,8 +7,8 @@ class Firebase {
     constructor() {
       this.app = firebase.initializeApp(dev);
       this.auth = firebase.auth()
-      this.app.firestore().enablePersistence()
-    .catch(e=>{throw e})
+    //   this.app.firestore().enablePersistence()
+    // .catch(e=>{throw e})
     }
 
     getUser = () =>{

@@ -41,8 +41,7 @@ export default function Header({firebase}){
             <Menu.Item onClick = {()=>handleSignOut()}><LoginOutlined/>Logout</Menu.Item>
         </Menu>
         
-    )
-  
+    )      
     return <Menu 
     
         mode="horizontal" overflowedIndicator={<UserOutlined/>} >
@@ -52,7 +51,7 @@ export default function Header({firebase}){
         <Menu.Item>Help & Support</Menu.Item>
     
         <Menu.Item style={{float:'right'}} >
-            {loading?<Spin/>:user?
+            {loading?<Spin/>:user&&!user.isAnonymous?
                 <Dropdown  overlay={usermenu}>
                         <a  href="#/app"><Avatar src={user.photoURL}/> {user.displayName}</a>
                 </Dropdown>
